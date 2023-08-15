@@ -6,7 +6,7 @@ TODO: DO ALL THIS
 
 ## Using the quote-mapper
 
-The quote mapper is a cmd script used for transforming 'quotes.json' into a structure more similar to how the db is structured.
+The quote mapper is a cmd script used for transforming `quotes.json` into a structure more similar to how the db is structured.
 
 Usage:
 

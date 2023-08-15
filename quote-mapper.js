@@ -11,7 +11,7 @@ const shuffle = (array) => {
   return array;
 };
 
-const januaryFirst = new Date(2023, 0, 1);
+const januaryFirst = new Date(2000, 0, 1);
 
 const monthNames = [
   "January",

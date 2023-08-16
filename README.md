@@ -1,8 +1,20 @@
 # daily-quote
 
-##
+A website giving daily quotes, with random quote functionality
 
-TODO: DO ALL THIS
+## Prerequisites
+
+- node ^16.0.0
+- npm ^8.0.0
+
+## Setup
+
+- `npm install` to install dependencies
+
+## Running
+
+- `npm run start` for prod running
+- `npm run start:dev` for local development with `nodemon` and `ts-node`
 
 ## Using the quote-mapper
 
@@ -45,3 +57,10 @@ Usage:
 - **NB:** the process is destructive, so `formatted-quotes.json` will be overwritten if it already exists
 
 - if you want to add an index property to `formatted-quotes.json`, run `node quote-mapper.js -i`
+
+## Collaborators
+
+- [Marni Kleingeld](https://github.com/MarniKleingeld)
+- [Lisa Nolte](https://github.com/LisaNolte1)
+- [George Pauer](https://github.com/gpauer)
+- [Willa Charlotte Lyle](https://github.com/WillaCharlotte)

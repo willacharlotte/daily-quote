@@ -41,7 +41,7 @@ const mapper = (quote, index) => {
     content: quote["quote"],
   };
   return includeIndex
-    ? { index: index.toString(), ...bareMappedQuote }
+    ? { id: index.toString(), ...bareMappedQuote }
     : bareMappedQuote;
 };
 

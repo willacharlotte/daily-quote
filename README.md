@@ -56,7 +56,7 @@ Usage:
 
 - **NB:** the process is destructive, so `formatted-quotes.json` will be overwritten if it already exists
 
-- if you want to add an index property to `formatted-quotes.json`, run `node quote-mapper.js -i`
+- if you want to add an id property to `formatted-quotes.json`, run `node quote-mapper.js -i`
 
 ## Collaborators
 

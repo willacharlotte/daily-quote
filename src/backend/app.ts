@@ -14,4 +14,9 @@ app.use(staticRoutes);
 
 app.listen(ENV.PORT, () => {
   console.log(`App listening on ${ENV.PORT}`);
+  if (ENV.ENVIRONMENT === "dev") {
+    console.log(
+      `psst, here's a link, you lazy potato: http://localhost:${ENV.PORT}/`
+    );
+  }
 });

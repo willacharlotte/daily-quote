@@ -40,8 +40,9 @@ const mapper = (quote, index) => {
     author: quote["author"],
     content: quote["quote"],
   };
-
-  return includeIndex ? { index: index, ...bareMappedQuote } : bareMappedQuote;
+  return includeIndex
+    ? { index: index.toString(), ...bareMappedQuote }
+    : bareMappedQuote;
 };
 
 const rawQuotes = JSON.parse(fs.readFileSync("quotes.json"));

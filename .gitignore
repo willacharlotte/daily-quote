@@ -1,0 +1,9 @@
+formatted-quotes.json
+
+dist/
+
+.vscode/
+
+.env
+
+node_modules/

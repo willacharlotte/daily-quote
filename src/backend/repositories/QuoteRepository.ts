@@ -1,4 +1,4 @@
-import Quote from "../models/Quote";
+import { Quote } from "../schemas/Quote";
 
 export namespace QuoteRepository {
   const getByDate = (date: Date): Quote | null => {

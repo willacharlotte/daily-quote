@@ -13,30 +13,19 @@ const shuffle = (array) => {
 
 const januaryFirst = new Date(2000, 0, 1);
 
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 const mapper = (quote, index) => {
   const rawDate = new Date(januaryFirst);
   rawDate.setDate(index + 1);
-  const [d, m] = [rawDate.getDate(), monthNames[rawDate.getMonth()]];
+  const [d, m, y] = [
+    rawDate.getDate(),
+    rawDate.getMonth() + 1,
+    rawDate.getFullYear(),
+  ].map((v) => v.toString());
 
   const includeIndex = argv[argv.length - 1] === "-i";
 
   const bareMappedQuote = {
-    date: `${d} ${m}`,
+    date: `${d.padStart(2, "0")}-${m.padStart(2, "0")}-${y}`,
     author: quote["author"],
     content: quote["quote"],
   };

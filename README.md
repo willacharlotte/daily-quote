@@ -42,12 +42,12 @@ Usage:
 ```json
 [
   {
-    "date": "1 January",
+    "date": "01-01-2000",
     "author": "An author",
     "content": "A quote"
   },
   {
-    "date": "2 January",
+    "date": "02-01-2000",
     "author": "Another author",
     "content": "Another quote"
   }

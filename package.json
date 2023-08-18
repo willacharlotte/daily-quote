@@ -1,0 +1,31 @@
+{
+  "name": "daily-quote",
+  "version": "1.0.0",
+  "description": "A website giving daily quotes",
+  "scripts": {
+    "fe:install": "npm install --prefix ./frontend",
+    "be:install": "npm install --prefix ./backend",
+    "be:start": "cd ./backend && npm run start",
+    "be:start:dev": "cd ./backend && npm run start:dev",
+    "fe:ng": "cd ./frontend && npm run ng",
+    "fe:start": "cd ./frontend && npm run start",
+    "fe:build": "cd ./frontend && npm run build",
+    "fe:watch": "cd ./frontend && npm run watch",
+    "fe:test": "cd ./frontend && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willacharlotte/daily-quote.git"
+  },
+  "keywords": [
+    "webapp",
+    "website",
+    "quotes"
+  ],
+  "author": "Willa Charlotte Lyle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/willacharlotte/daily-quote/issues"
+  },
+  "homepage": "https://github.com/willacharlotte/daily-quote#readme"
+}

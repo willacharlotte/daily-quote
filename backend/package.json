@@ -1,8 +1,6 @@
 {
-  "name": "daily-quote",
+  "name": "daily-quote-be",
   "version": "1.0.0",
-  "description": "A website giving daily quotes, with random quote functionality",
-  "main": "./src/app.ts",
   "private": true,
   "engines": {
     "node": ">=16.0.0 <19.0.0",
@@ -12,16 +10,6 @@
     "start": "tsc && node ./dist/app.js",
     "start:dev": "npx nodemon"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/willacharlotte/daily-quote.git"
-  },
-  "author": "Willa Charlotte Lyle",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/willacharlotte/daily-quote/issues"
-  },
-  "homepage": "https://github.com/willacharlotte/daily-quote#readme",
   "nodemonConfig": {
     "watch": [
       "./src/"
@@ -31,12 +19,13 @@
     "exec": "npx ts-node ./src/app.ts"
   },
   "dependencies": {
+    "aws-sdk": "^2.1438.0",
+    "daily-quote": "file:..",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "typescript": "^5.1.6",
-    "zod": "^3.22.1",
-    "aws-sdk": "^2.1438.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zod": "^3.22.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

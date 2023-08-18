@@ -1,0 +1,16 @@
+<header>
+  <h1>Daily Quote</h1>
+  <nav>
+    <h1>Home</h1>
+    <button (click)="handleButtonClick()">New Quote</button>
+  </nav>
+</header>
+<section class="content">
+  <article class="quote-container">
+    <h2>{{ currentQuote.author }}</h2>
+    <p class="quote-content">
+      {{ currentQuote.content }}
+    </p>
+  </article>
+</section>
+<footer>2023 (C)</footer>

@@ -2,13 +2,14 @@
   "name": "daily-quote",
   "version": "1.0.0",
   "description": "A website giving daily quotes, with random quote functionality",
-  "main": "src/backend/app.ts",
+  "main": "./src/app.ts",
+  "private": true,
   "engines": {
     "node": ">=16.0.0 <19.0.0",
     "npm": ">=8.0.0 <10.0.0"
   },
   "scripts": {
-    "start": "tsc && node ./dist/backend/app.js",
+    "start": "tsc && node ./dist/app.js",
     "start:dev": "npx nodemon"
   },
   "repository": {
@@ -27,7 +28,7 @@
     ],
     "ext": "*",
     "delay": 2000,
-    "exec": "npx ts-node ./src/backend/app.ts"
+    "exec": "npx ts-node ./src/app.ts"
   },
   "dependencies": {
     "dotenv": "^16.3.1",

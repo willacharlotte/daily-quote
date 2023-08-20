@@ -1,10 +1,10 @@
 import zod from "zod";
 
 const dateRefine = (rawDate: string) => {
-  const dateFormat = /^\d{2}-\d{2}-\d{4}$/;
+  const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
   if (!dateFormat.test(rawDate)) return false;
   try {
-    const [d, m, y] = rawDate.split("-").map((v) => parseInt(v));
+    const [y, m, d] = rawDate.split("-").map((v) => parseInt(v));
     const date = new Date(y, m - 1, d);
     return (
       !isNaN(date.getTime()) &&

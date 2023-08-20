@@ -27,14 +27,14 @@ fs.readFile('quotes.json', 'utf8', async (readErr, data) => {
         }
 
         const dynamodb = new AWS.DynamoDB();
-
+        let index = 0;
         // Iterate through each chunk and make BatchWriteItem requests
         for (const chunk of dataChunks) {
-            const reformattedData = chunk.map(item => ({
+            const reformattedData = chunk.map((item) => ({
                 PutRequest: {
                     Item: {
-                        "Id": { "S": uuid.v4() },
-                        "Date": { "S": generateUniqueDate() },
+                        "Id": { "S": uuid.v4() }, // Generate a unique ID
+                        "Date": { "S": generateUniqueDate(index++) }, // Generate a unique date
                         "Author": { "S": item.author },
                         "Quote": { "S": item.quote }
                     }
@@ -46,6 +46,7 @@ fs.readFile('quotes.json', 'utf8', async (readErr, data) => {
                     "DailyQuotes": reformattedData
                 }
             };
+            // console.log(JSON.stringify(params)+ '\n');
 
             try {
                 await dynamodb.batchWriteItem(params).promise();
@@ -60,8 +61,9 @@ fs.readFile('quotes.json', 'utf8', async (readErr, data) => {
 });
 
 // Function to generate a unique date
-function generateUniqueDate() {
+function generateUniqueDate(index) {
     const today = new Date();
+    today.setDate(today.getDate() + index); // Increment the date based on the index
     const formattedDate = today.toISOString().substring(0, 10); // Format as "YYYY-MM-DD"
     return formattedDate;
 }

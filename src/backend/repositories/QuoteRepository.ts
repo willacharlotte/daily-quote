@@ -9,7 +9,6 @@ export namespace QuoteRepository {
     accessKeyId: ENV.AWS_DYNAMODB_ACCESSKEY,
     secretAccessKey: ENV.AWS_DYNAMODB_SECRETKEY,
     region: ENV.AWS_DYNAMODB_REGION,
-    logger: console
   })
   
   const table = ENV.AWS_DYNAMODB_TABLE

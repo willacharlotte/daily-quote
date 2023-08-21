@@ -3,17 +3,17 @@ import { QuoteRepository } from "../../repositories/QuoteRepository";
 
 export const getOneRandom = async (req: Request, res: Response) => {
   try {
-    const randomQuote = await QuoteRepository.getOneRandom();
+    const { data, messages } = await QuoteRepository.getOneRandom();
 
-    if (randomQuote) {
-        res.json(randomQuote);
+    if (data) {
+      res.json(data);
     } else {
-        res.status(404);
-        res.json({ message: "Random quote not found" });
+      res.status(404);
+      res.json({ messages: ["Random quote not found", ...messages] });
     }
-} catch (error) {
-    console.error('An error occurred:', error);
+  } catch (error) {
+    console.error("An error occurred:", error);
     res.status(500);
     res.json({ error: "An error occurred while fetching the quote." });
-}
+  }
 };

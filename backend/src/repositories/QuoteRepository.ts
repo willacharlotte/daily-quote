@@ -1,66 +1,90 @@
 import { ENV } from "../config/env";
-import { Quote, dateSchema } from "../schemas/Quote";
-import * as AWS from 'aws-sdk';
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import * as AWS from "aws-sdk";
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { Quote, dynamoDataSchema, dynamoDocItemSchema } from "../schemas";
+import dynamoDataToQuote from "../transformers/dynamoDataToQuote";
 
 export namespace QuoteRepository {
-  
   AWS.config.update({
     accessKeyId: ENV.AWS_DYNAMODB_ACCESSKEY,
     secretAccessKey: ENV.AWS_DYNAMODB_SECRETKEY,
     region: ENV.AWS_DYNAMODB_REGION,
-  })
-  
-  const table = ENV.AWS_DYNAMODB_TABLE
+  });
+
+  const table = ENV.AWS_DYNAMODB_TABLE;
   const dynamodb = new AWS.DynamoDB();
-  
-  export const getOneByDate = async (date: string): Promise<{ data: Record<string, any> | null, messages: string[] }> => {
+
+  const processItems = (
+    items: AWS.DynamoDB.ItemList
+  ): { quotes: Quote[]; messages: string[] } => {
+    const quotes: Quote[] = [];
+    const messages: string[] = [];
+
+    items
+      .map((item) => dynamoDataSchema.safeParse(item))
+      .forEach((item) => {
+        if (item.success) {
+          quotes.push(dynamoDataToQuote(item.data));
+        } else {
+          messages.push(...item.error.issues.map((issue) => issue.message));
+        }
+      });
+
+    return { quotes, messages };
+  };
+
+  export const getOneByDate = async (
+    date: string
+  ): Promise<{ data?: Quote; messages: string[] }> => {
     return new Promise((resolve, reject) => {
       const params = {
         TableName: table,
-        FilterExpression: '#dateAttr = :dateValue',
+        FilterExpression: "#dateAttr = :dateValue",
         ExpressionAttributeNames: {
-          '#dateAttr': 'Date'
+          "#dateAttr": "Date",
         },
         ExpressionAttributeValues: {
-          ':dateValue': { S: date }
-        }
+          ":dateValue": { S: date },
+        },
       };
 
       const messages: string[] = [];
 
       dynamodb.scan(params, (err, data) => {
         if (err) {
-          messages.push('Error scanning table: ' + err.message);
-          reject(err);
+          messages.push("Error scanning table: " + err.message);
+          reject({ messages });
+        } else if (data.Items === undefined || data.Items.length === 0) {
+          messages.push("No items found.");
+          resolve({ messages });
         } else {
-          if (data.Items !== undefined && data.Items.length > 0) {
-            const firstItem = data.Items[0];
-            const quoteValue = firstItem.Quote.S;
-            if (quoteValue !== undefined) {
-              resolve({ data: firstItem, messages });
-            } else {
-              messages.push('Quote value is undefined.');
-              resolve({ data: null, messages });
-            }
+          const { quotes, messages: processMessages } = processItems([
+            data.Items[0],
+          ]);
+          messages.push(...processMessages);
+
+          if (quotes.length === 0) {
+            reject({ messages });
           } else {
-            messages.push('No items found.');
-            resolve({ data: null, messages });
+            resolve({ data: quotes[0], messages });
           }
         }
       });
     });
   };
 
-  export const getRandomUUID = async (): Promise<{ uuid: string | null, date: string | null }> => {
+  const getRandomUUID = async (): Promise<{
+    uuid: string | null;
+    date: string | null;
+  }> => {
     try {
       const params: DocumentClient.ScanInput = {
         TableName: table,
-        ProjectionExpression: '#id, #date', // Use expression attribute names
+        ProjectionExpression: "#id, #date", // Use expression attribute names
         ExpressionAttributeNames: {
-          '#id': 'Id',
-          '#date': 'Date'
-        }
+          "#id": "Id",
+          "#date": "Date",
+        },
       };
       const { Items } = await dynamodb.scan(params).promise();
 
@@ -72,106 +96,139 @@ export namespace QuoteRepository {
         if (randomUUIDAttributeValue.S && randomDateAttributeValue.S) {
           return {
             uuid: randomUUIDAttributeValue.S,
-            date: randomDateAttributeValue.S
+            date: randomDateAttributeValue.S,
           };
-        } 
-        else {
+        } else {
           return {
             uuid: null,
-            date: null
+            date: null,
           };
-       }
-      } 
-      else {
+        }
+      } else {
         return {
           uuid: null,
-          date: null
+          date: null,
         };
       }
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error("An error occurred:", error);
       throw error;
     }
   };
 
-  export const getOneRandom = async (): Promise<Record<string, any> | null> => {
+  export const getOneRandom = async (): Promise<{
+    data?: Quote;
+    messages: string[];
+  }> => {
     const dynamodbDoc = new DocumentClient();
     try {
-      const { uuid, date } = await QuoteRepository.getRandomUUID();
+      const { uuid, date } = await getRandomUUID();
 
       if (!uuid || !date) {
-          return null;
+        throw new Error("Could not find uuid and date");
       }
 
       const params: DocumentClient.GetItemInput = {
         TableName: table,
         Key: {
-          "Id": uuid,
-          "Date": date
-        }
+          Id: uuid,
+          Date: date,
+        },
       };
 
       const { Item } = await dynamodbDoc.get(params).promise();
 
-      if (Item) {
-        return Item;
-      } else {
-        return null;
+      const parsedItem = dynamoDocItemSchema.safeParse(Item);
+
+      if (!parsedItem.success) {
+        throw new Error("Error parsing item");
       }
-    } catch (error) {
-      console.error('An error occurred:', error);
-      throw error;
+
+      return {
+        data: {
+          id: parsedItem.data.Id,
+          content: parsedItem.data.Quote,
+          author: parsedItem.data.Author,
+          date: parsedItem.data.Date,
+        },
+        messages: [],
+      };
+    } catch (error: any) {
+      return { messages: ["An error occured", error?.message] };
     }
   };
 
-  export const getAllByAuthor = async (author: string): Promise<{ data: Record<string, any> | null, messages: string[] }> => {
+  export const getAllByAuthor = async (
+    author: string
+  ): Promise<{ data?: Quote[]; messages: string[] }> => {
     return new Promise((resolve, reject) => {
       const params = {
         TableName: table,
-        IndexName: 'AuthorIndex', // Replace with the actual GSI name
-        KeyConditionExpression: '#authorAttr = :authorValue',
+        IndexName: "AuthorIndex", // Replace with the actual GSI name
+        KeyConditionExpression: "#authorAttr = :authorValue",
         ExpressionAttributeNames: {
-          '#authorAttr': 'Author'
+          "#authorAttr": "Author",
         },
         ExpressionAttributeValues: {
-          ':authorValue': { S: author }
-        }
-        };
+          ":authorValue": { S: author },
+        },
+      };
 
       const messages: string[] = [];
 
       dynamodb.query(params, (err, data) => {
         if (err) {
-          console.error('Error querying index:', err);
-          reject(err);
+          messages.push("Error querying index:", err.message);
+          reject({ messages });
+        } else if (data.Items === undefined) {
+          messages.push("No quotes by the given author were found");
+          resolve({ data: [], messages });
         } else {
-          if (data.Items !== undefined) {
-            resolve({ data: data.Items, messages });
+          const { quotes, messages: processMessages } = processItems(
+            data.Items
+          );
+          messages.push(...processMessages);
+
+          if (quotes.length !== data.Items.length) {
+            messages.push("Format error on the incoming data");
+            reject({ messages });
           } else {
-            messages.push("No quotes by the given author were found");
-                resolve({ data: [], messages });
+            resolve({ data: quotes, messages });
           }
         }
       });
     });
   };
 
-export const getAll = async (): Promise<Array<Record<string, any>>> => {
-  const params: DocumentClient.ScanInput = {
-      TableName: table
-  };
+  export const getAll = async (): Promise<{
+    data?: Quote[];
+    messages: string[];
+  }> => {
+    return new Promise((resolve, reject) => {
+      const params: DocumentClient.ScanInput = {
+        TableName: table,
+      };
 
-  return new Promise((resolve, reject) => {
-    dynamodb.scan(params, (err, data) => {
-      if (err) {
-        console.error('Error scanning table:', err);
-        reject(err);
-      } else {
-        if (data.Items !== undefined) {
-          resolve(data.Items);
+      const messages: string[] = [];
+
+      dynamodb.scan(params, (err, data) => {
+        if (err) {
+          messages.push("Error querying index:", err.message);
+          reject({ messages });
+        } else if (data.Items === undefined) {
+          messages.push("No quotes were found");
+          resolve({ data: [], messages });
         } else {
-          console.log('No items found.');
-          resolve([]);
+          const { quotes, messages: processMessages } = processItems(
+            data.Items
+          );
+          messages.push(...processMessages);
+
+          if (quotes.length !== data.Items.length) {
+            messages.push("Format error on the incoming data");
+            reject({ messages });
+          } else {
+            resolve({ data: quotes, messages });
           }
         }
       });

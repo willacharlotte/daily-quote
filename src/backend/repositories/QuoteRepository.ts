@@ -1,12 +1,7 @@
-import { Quote, dateSchema } from "../schemas/Quote";
+import { Quote } from "../schemas/Quote";
 import { QUOTES } from "./tempQuotes";
 
 export namespace QuoteRepository {
-  export const getOneByDate = (date: string): Quote | undefined => {
-    dateSchema.parse(date);
-    return getAll().find((quote) => quote.date === date);
-  };
-
   export const getOneRandom = (): Quote | undefined => {
     const quotes = getAll();
     return quotes.length === 0
@@ -14,11 +9,11 @@ export namespace QuoteRepository {
       : quotes[Math.floor(Math.random() * quotes.length)];
   };
 
-  export const getAllByAuthor = (author: string): Quote[] => {
-    return getAll().filter((quote) => quote.author === author);
-  };
-
-  export const getAll = (): Quote[] => {
-    return QUOTES;
+  export const getAll = (author : string = "", date : string = ""): Quote[] => {
+    return QUOTES.filter(quote => {
+      return (author == "" && date == "")
+          || (author != "" && author === quote.author)
+          || (date != "" && new Date(date) === new Date(quote.date))
+    });
   };
 }

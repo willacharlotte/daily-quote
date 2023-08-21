@@ -1,22 +1,37 @@
 # daily-quote
 
-A website giving daily quotes, with random quote functionality
+A website providing daily quotes, with random quote and (potential) calendar functionality
 
 ## Prerequisites
 
 - node ^16.0.0
 - npm ^8.0.0
 
+## Notes
+
+This is a parent package for the frontend and backend packages, so look at those for more detailed info.
+
+Scripts here are just references to the scripts in the sub-packages.
+
 ## Setup
 
-- `npm install` to install dependencies
+- `npm run fe:install` to install frontend dependencies
+- `npm run be:install` to install backend dependencies
+- `cp ./backend/.env.example ./backend/.env` and populate with values from another dev
 
 ## Running
 
-- `npm run start` for prod running
-- `npm run start:dev` for local development with `nodemon` and `ts-node`
+- `npm run be:start` for running backend
+- `npm run fe:start` for running frontend
 
-## Using the quote-mapper
+## Collaborators
+
+- [George Pauer](https://github.com/gpauer)
+- [Lisa Nolte](https://github.com/LisaNolte1)
+- [Marni Kleingeld](https://github.com/MarniKleingeld)
+- [Willa Charlotte Lyle](https://github.com/WillaCharlotte)
+
+## Using the quote-mapper (deprecated)
 
 The quote mapper is a cmd script used for transforming `quotes.json` into a structure more similar to how the db is structured.
 
@@ -57,10 +72,3 @@ Usage:
 - **NB:** the process is destructive, so `formatted-quotes.json` will be overwritten if it already exists
 
 - if you want to add an id property to `formatted-quotes.json`, run `node quote-mapper.js -i`
-
-## Collaborators
-
-- [Marni Kleingeld](https://github.com/MarniKleingeld)
-- [Lisa Nolte](https://github.com/LisaNolte1)
-- [George Pauer](https://github.com/gpauer)
-- [Willa Charlotte Lyle](https://github.com/WillaCharlotte)

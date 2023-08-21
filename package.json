@@ -1,46 +1,31 @@
 {
   "name": "daily-quote",
   "version": "1.0.0",
-  "description": "A website giving daily quotes, with random quote functionality",
-  "main": "src/backend/app.ts",
-  "engines": {
-    "node": ">=16.0.0 <19.0.0",
-    "npm": ">=8.0.0 <10.0.0"
-  },
+  "description": "A website giving daily quotes",
   "scripts": {
-    "start": "tsc && node ./dist/backend/app.js",
-    "start:dev": "npx nodemon"
+    "fe:install": "npm install --prefix ./frontend",
+    "be:install": "npm install --prefix ./backend",
+    "be:start": "cd ./backend && npm run start",
+    "be:start:dev": "cd ./backend && npm run start:dev",
+    "fe:ng": "cd ./frontend && npm run ng",
+    "fe:start": "cd ./frontend && npm run start",
+    "fe:build": "cd ./frontend && npm run build",
+    "fe:watch": "cd ./frontend && npm run watch",
+    "fe:test": "cd ./frontend && npm run test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/willacharlotte/daily-quote.git"
   },
+  "keywords": [
+    "webapp",
+    "website",
+    "quotes"
+  ],
   "author": "Willa Charlotte Lyle",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/willacharlotte/daily-quote/issues"
   },
-  "homepage": "https://github.com/willacharlotte/daily-quote#readme",
-  "nodemonConfig": {
-    "watch": [
-      "./src/"
-    ],
-    "ext": "*",
-    "delay": 2000,
-    "exec": "npx ts-node ./src/backend/app.ts"
-  },
-  "dependencies": {
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "typescript": "^5.1.6",
-    "zod": "^3.22.1",
-    "aws-sdk": "^2.1438.0",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.17",
-    "@types/node": "^20.5.0",
-    "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
-  }
+  "homepage": "https://github.com/willacharlotte/daily-quote#readme"
 }

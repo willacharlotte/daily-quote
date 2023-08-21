@@ -1,21 +1,35 @@
 import { Request, Response } from "express";
 import { QuoteRepository } from "../../repositories/QuoteRepository";
 
-export const getAllByAuthor = (req: Request, res: Response) => {
+export const getAllByAuthor = async (req: Request, res: Response) => {
   const author = req.params.name;
 
   if (!author) {
     res.status(400);
-    res.end("No author was given?");
+    res.json({ error: "No author was given?" });
     return;
   }
 
-  const quotes = QuoteRepository.getAllByAuthor(author);
+  const { data: quotes, messages } = await QuoteRepository.getAllByAuthor(
+    author
+  );
 
-  if (quotes) {
-    res.end(JSON.stringify(quotes));
+  if (!quotes) {
+    console.error("An error occurred:", ...messages);
+    res.status(500);
+    res.json({
+      error: "An error occurred while fetching the quotes.",
+      messages,
+    });
+    return;
+  }
+
+  if (quotes.length === 0) {
+    res.status(404);
+    res.json({ messages });
+    return;
   } else {
-    res.status(204);
-    res.end("no quotes by given author were found");
+    res.json(quotes);
+    return;
   }
 };

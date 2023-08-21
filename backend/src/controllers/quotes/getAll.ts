@@ -1,12 +1,25 @@
 import { Request, Response } from "express";
 import { QuoteRepository } from "../../repositories/QuoteRepository";
 
-export const getAll = (req: Request, res: Response) => {
-  const quotes = QuoteRepository.getAll();
-  if (quotes) {
-    res.end(JSON.stringify(quotes));
+export const getAll = async (req: Request, res: Response) => {
+  const { data: quotes, messages } = await QuoteRepository.getAll();
+
+  if (!quotes) {
+    console.error("An error occurred:", ...messages);
+    res.status(500);
+    res.json({
+      error: "An error occurred while fetching the quotes.",
+      messages,
+    });
+    return;
+  }
+
+  if (quotes.length === 0) {
+    res.status(404);
+    res.json({ messages });
+    return;
   } else {
-    res.status(204);
-    res.end("no quotes were found");
+    res.json(quotes);
+    return;
   }
 };

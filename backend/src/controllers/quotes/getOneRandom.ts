@@ -1,13 +1,19 @@
 import { Request, Response } from "express";
 import { QuoteRepository } from "../../repositories/QuoteRepository";
 
-export const getOneRandom = (req: Request, res: Response) => {
-  const quote = QuoteRepository.getOneRandom();
+export const getOneRandom = async (req: Request, res: Response) => {
+  try {
+    const { data, messages } = await QuoteRepository.getOneRandom();
 
-  if (quote) {
-    res.end(JSON.stringify(quote));
-  } else {
-    res.status(204);
-    res.end("no quotes were found, so a random one couldn't be selected");
+    if (data) {
+      res.json(data);
+    } else {
+      res.status(404);
+      res.json({ messages: ["Random quote not found", ...messages] });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    res.status(500);
+    res.json({ error: "An error occurred while fetching the quote." });
   }
 };

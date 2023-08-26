@@ -5,7 +5,7 @@
     <button (click)="handleButtonClick()">New Quote</button>
   </nav>
 </header>
-<section class="content">
+<section class="content" *ngIf="currentQuote">
   <article class="quote-container">
     <h2>{{ currentQuote.author }}</h2>
     <p class="quote-content">

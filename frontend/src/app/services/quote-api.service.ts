@@ -6,13 +6,23 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class QuoteApiService {
-  private API_BASE = 'aws url here';
+  private API_BASE = 'http://localhost:8080';
 
   constructor(private httpClient: HttpClient) {}
 
   public getAllQuotes(): Observable<quoteModel[]> {
-    const url = '${this.API_BASE}/quotes';
+    const url = this.API_BASE + '/quotes';
     return this.httpClient.get<quoteModel[]>(url);
+  }
+
+  getQuoteWithTodaysDate(quotes: quoteModel[]): quoteModel | undefined {
+    const today = new Date().toISOString().split('T')[0];
+    return quotes.find(quote => quote.date === today);
+  }
+
+  getRandomQuote(): Observable<quoteModel> {
+    const url = this.API_BASE + '/quotes/random';
+    return this.httpClient.get<quoteModel>(url);
   }
 }
 

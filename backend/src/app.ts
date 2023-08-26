@@ -9,8 +9,8 @@ import fs from 'fs';
 const app = express();
 
 const options = {
-  key: fs.readFileSync('/path/to/private-key.pem'), // Path to your private key file
-  cert: fs.readFileSync('/path/to/certificate.pem'), // Path to your certificate file
+  key: fs.readFileSync('/etc/letsencrypt/live/www.georgep.link/privkey.pem'), // Path to your private key file
+  cert: fs.readFileSync('/etc/letsencrypt/live/www.georgep.link/fullchain.pem'), // Path to your certificate file
 };
 
 app.use(apiMiddleware);

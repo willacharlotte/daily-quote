@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/willacharlotte/daily-quote#readme",
   "dependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "https": "^1.0.0"
   }
 }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class QuoteApiService {
-  private API_BASE = 'http://localhost:8080';
+  private API_BASE = 'https://georgep.link:444';
 
   constructor(private httpClient: HttpClient) {}
 

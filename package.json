@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/willacharlotte/daily-quote/issues"
   },
-  "homepage": "https://github.com/willacharlotte/daily-quote#readme"
+  "homepage": "https://github.com/willacharlotte/daily-quote#readme",
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
 }

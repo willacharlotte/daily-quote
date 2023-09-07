@@ -16,7 +16,7 @@ const options = {
 app.use(apiMiddleware);
 
 app.use(cors({
-  origin: 'https://georgep.link:443',
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
